@@ -4,20 +4,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TareaBackEnd.Models;
+using TareaBackEnd.Services;
 
 namespace TareaBackEnd.Controllers {
-	[Route("api/[controller]/[action]")]
+	[Route("api/[controller]")]
 	[ApiController]
+
 	public class ClientController : Controller {
-		private NorthwindContext context = new NorthwindContext();
+
+		private CustomerService customer_service = new CustomerService();
 
 		[HttpGet]
-		private IQueryable<Customer> getCustomersFromDB() {
-			return context.Customers.AsQueryable();
+		public List<Customer> getCustomers() {
+			return customer_service.getAll();
 		}
 
-		public List<Customer> getCustomers() {
-			return getCustomersFromDB().ToList();
+		[HttpGet("{id}")]
+		public Customer getCustomersByID(string id) {
+			return customer_service.getByID( id );
 		}
+
+		[HttpPost]
+		public void insertCustomer() {
+			var customer = new Customer { };
+			customer_service.insert( customer );
+		}
+
+		[HttpDelete("{id}")]
+		public void deleteCustomerByID(string id) {
+			customer_service.deleteByID( id );
+		}
+
+
+
 	}
 }
