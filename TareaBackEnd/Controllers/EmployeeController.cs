@@ -16,28 +16,43 @@ namespace TareaBackEnd.Controllers {
 		private EmployeeService employeeService = new EmployeeService();
 		
 		[HttpGet]
-		public List<Employee> getEmployees() {
-			return employeeService.getAll().Select( s => new Employee { 
-				EmployeeId = s.EmployeeId,
-				FirstName = s.FirstName,
-				LastName = s.LastName
-			} ).ToList();
+		public IActionResult getEmployees() {
+			try {
+				return Ok(employeeService.getAll());
+			} catch (Exception except) {
+				return StatusCode(StatusCodes.Status500InternalServerError, except.Message);
+			}
+			
 		}
 
 		[HttpGet("{id}")]
-		public Employee getEmployeeByID(int id) {
-			return employeeService.getByID(id);
+		public IActionResult getEmployeeByID(int id) {
+			try {
+				return Ok(employeeService.getByID(id));
+			} catch (Exception exept) {
+				return StatusCode(StatusCodes.Status500InternalServerError, exept.Message);
+			}
 		}
 
 		[HttpPost]
-		public void insertEmployee() {
-			var employee = new Employee { };
-			employeeService.insert(employee);
+		public IActionResult insertEmployee() {
+			try {
+				var employee = new Employee { };
+				employeeService.insert(employee);
+				return Ok();
+			} catch (Exception except) {
+				return StatusCode(StatusCodes.Status500InternalServerError, except.Message);
+			}
 		}
 
 		[HttpDelete("{id}")]
-		public void deleteEmployeeByID(int id) {
-			employeeService.deleteByID(id);
+		public IActionResult deleteEmployeeByID(int id) {
+			try {
+				employeeService.deleteByID(id);
+				return Ok();
+			} catch (Exception except) {
+				return StatusCode(StatusCodes.Status500InternalServerError, except.Message);
+			}
 		}
 	}
 }
