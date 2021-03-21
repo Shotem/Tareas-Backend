@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TareaBackEnd.Models;
 
 namespace TareaBackEnd.Services {
+	
 	public class BaseService {
 		protected NorthwindContext dbContext = new NorthwindContext();
 	}

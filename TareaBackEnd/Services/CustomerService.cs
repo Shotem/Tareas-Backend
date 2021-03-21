@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using TareaBackEnd.Models;
 
 namespace TareaBackEnd.Services {
+	
 	public class CustomerService : BaseService {
+		
 		private IQueryable<Customer> getFromDB() {
 			return dbContext.Customers;
 		}
@@ -15,17 +17,31 @@ namespace TareaBackEnd.Services {
 		}
 
 		public Customer getByID(string id) {
-			return getFromDB().Where(w => w.CustomerId == id).FirstOrDefault();
+			var customer = getFromDB().Where(w => w.CustomerId == id).FirstOrDefault();
+			if (customer == null) throw new Exception($"There's no customer with id {id}");
+
+			return customer;
 		}
 
 		public void deleteByID(string id) {
-			dbContext.Customers.Remove(getByID(id));
-			dbContext.SaveChanges();
+			try {
+				dbContext.Customers.Remove(getByID(id));
+				dbContext.SaveChanges();
+			} catch (Exception except) {
+				Console.WriteLine($"Could not remove customer:\n{except.Message}");
+				throw new Exception("Could not remove customer");
+			}
 		}
 
-		public void insert( Customer c ) {
-			dbContext.Customers.Add(c);
-			dbContext.SaveChanges();
+		public void insert( Customer customer ) {
+			try {
+				dbContext.Customers.Add(customer);
+				dbContext.SaveChanges();
+			} catch (Exception except) {
+				Console.WriteLine($"Could not insert customer:\n{except.Message}");
+				throw new Exception("Could not insert customer");
+			}
+			
 		}
 	}
 }
