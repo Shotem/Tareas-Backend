@@ -27,7 +27,7 @@ namespace TareaBackEnd.Controllers {
 		[HttpGet("{id}")]
 		public IActionResult getCustomersByID(string id) {
 			try {
-				return Ok(customer_service.getByID(id););
+				return Ok(customer_service.getByID(id));
 			} catch (Exception except) {
 				return StatusCode(StatusCodes.Status500InternalServerError, except.Message);
 			}
