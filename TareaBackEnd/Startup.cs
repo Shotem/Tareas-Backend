@@ -13,6 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace TareaBackEnd {
 	public class Startup {
+
+		private const string CorsName = "_my_cors";
+
 		public Startup(IConfiguration configuration) {
 			Configuration = configuration;
 		}
@@ -22,6 +25,15 @@ namespace TareaBackEnd {
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services) {
 			services.AddControllers();
+			services.AddCors(
+				options => options.AddPolicy(
+					name: CorsName,
+					builder => {
+						builder
+							.AllowAnyOrigin()
+							.AllowAnyHeader()
+							.AllowAnyMethod();
+					}));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +47,8 @@ namespace TareaBackEnd {
 			app.UseRouting();
 
 			app.UseAuthorization();
+
+			app.UseCors(CorsName);
 
 			app.UseEndpoints(endpoints => {
 				endpoints.MapControllers();
